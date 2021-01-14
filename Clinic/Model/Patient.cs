@@ -10,7 +10,7 @@ namespace Clinic.Model
         public string FullName { get; set; }
         public bool Gender { get; set; }
         public Sickness Sickness { get; set; }
-
+        public SeverityOfDisease SeverityOfDisease { get; set; }
 
         public bool GetGender()
         {
@@ -78,7 +78,26 @@ namespace Clinic.Model
 
             return sickness;
         }
+        public SeverityOfDisease GetSeverityOfDisease()
+        {
+            var random = new Random().Next(1, 3);
+            var severityOfDisease = new SeverityOfDisease();
 
+            switch (random)
+            {
+                case 1:
+                    severityOfDisease = SeverityOfDisease.Weak;
+                    break;
+                case 2:
+                    severityOfDisease = SeverityOfDisease.Normal;
+                    break;
+                case 3:
+                    severityOfDisease = SeverityOfDisease.Acute;
+                    break;
+            }
+
+            return severityOfDisease;
+        }
     }
 
     public enum Sickness
@@ -88,5 +107,12 @@ namespace Clinic.Model
         Canser,
         Covid19,
         Cold
+    }
+
+    public enum SeverityOfDisease
+    {
+        Weak = 1,
+        Normal,
+        Acute
     }
 }

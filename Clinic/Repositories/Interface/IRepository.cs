@@ -9,7 +9,7 @@ namespace Clinic.Repositories.Interface
     public interface IRepository
     {
         Task GeneratingPatient();
-        Task<SeverityOfDisease> WomanReception();
+        Task Reception(int receptionId);
 
     }
 }
