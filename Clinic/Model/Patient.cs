@@ -12,46 +12,30 @@ namespace Clinic.Model
         public Sickness Sickness { get; set; }
         public SeverityOfDisease SeverityOfDisease { get; set; }
 
+
+
         public bool GetGender()
         {
             const bool MAN = true;
             const bool WOMAN = false;
 
-            bool getGender;
             var random = new Random().Next(1, 2);
 
-            if (random == 1)
-                getGender = MAN;
-            else
-                getGender = WOMAN;
-
-            return getGender;
+            return (random == 1) ? MAN : WOMAN;
         }
+
+
         public string GetFullName(bool genderType)
         {
-            const string HASAN = "HASAN";
-            const string ALI = "ALI";
-            const string MOHAMMAD = "MOHAMMAD";
-            const string REZA = "REZA";
-            const string JAMAL = "JAMAL";
-            var mans = new List<string>() { HASAN, ALI, MOHAMMAD, REZA, JAMAL };
-
-            const string SARA = "SARA";
-            const string MARYAM = "MARYAM";
-            const string NASTARAN = "NASTARAN";
-            const string SOMAYE = "SOMAYE";
-            const string TINA = "TINA";
-            var womans = new List<string>() { SARA, MARYAM, NASTARAN, SOMAYE, TINA };
+            var mans = new List<string>() { "HASAN", "ALI", "MOHAMMAD", "REZA", "JAMAL" };
+            var womans = new List<string>() { "SARA", "MARYAM", "NASTARAN", "SOMAYE", "TINA" };
 
             var random = new Random().Next(1, 5);
-            string fullName;
-            if (genderType)
-                fullName = mans[random];
-            else
-                fullName = womans[random];
 
-            return fullName;
+            return (genderType) ? mans[random] : womans[random];
         }
+
+
         public Sickness GetSickness()
         {
             var random = new Random().Next(1, 5);
@@ -78,6 +62,8 @@ namespace Clinic.Model
 
             return sickness;
         }
+
+
         public SeverityOfDisease GetSeverityOfDisease()
         {
             var random = new Random().Next(1, 3);
@@ -100,6 +86,7 @@ namespace Clinic.Model
         }
     }
 
+
     public enum Sickness
     {
         HeartAttack = 1,
@@ -108,6 +95,7 @@ namespace Clinic.Model
         Covid19,
         Cold
     }
+
 
     public enum SeverityOfDisease
     {

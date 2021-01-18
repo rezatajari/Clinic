@@ -38,7 +38,7 @@ namespace Clinic.Repositories
             }
         }
 
-        public async Task Reception(int receptionId)
+        public async Task Reception()
         {
             while (true)
             {
