@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Clinic.Model;
+using Clinic.Repositories;
+using System;
 
 namespace Clinic
 {
@@ -6,7 +8,11 @@ namespace Clinic
     {
         static void Main(string[] args)
         {
-       
+            var repo = new Repository();
+
+            _ = repo.GeneratingPatient();
+
+            repo.Reception().Wait();
         }
     }
 }

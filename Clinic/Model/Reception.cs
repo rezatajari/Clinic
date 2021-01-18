@@ -8,6 +8,7 @@ namespace Clinic.Model
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public List<Patient> Patients { get; set; }
+        public Patient Patients { get; set; }
+        public int Score { get; set; }
     }
 }

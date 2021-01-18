@@ -8,6 +8,7 @@ namespace Clinic.Model
     {
         public int Id { get; set; }
         public string FullName { get; set; }
+        public int Age { get; set; }
         public bool Gender { get; set; }
         public Sickness Sickness { get; set; }
         public SeverityOfDisease SeverityOfDisease { get; set; }
