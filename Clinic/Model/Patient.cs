@@ -25,7 +25,6 @@ namespace Clinic.Model
             return (random == 1) ? MAN : WOMAN;
         }
 
-
         public string GetFullName(bool genderType)
         {
             var mans = new List<string>() { "HASAN", "ALI", "MOHAMMAD", "REZA", "JAMAL" };
@@ -35,6 +34,8 @@ namespace Clinic.Model
 
             return (genderType) ? mans[random] : womans[random];
         }
+
+
 
 
         public Sickness GetSickness()
@@ -64,7 +65,6 @@ namespace Clinic.Model
             return sickness;
         }
 
-
         public SeverityOfDisease GetSeverityOfDisease()
         {
             var random = new Random().Next(1, 3);
@@ -87,7 +87,6 @@ namespace Clinic.Model
         }
     }
 
-
     public enum Sickness
     {
         HeartAttack = 1,
@@ -96,7 +95,6 @@ namespace Clinic.Model
         Covid19,
         Cold
     }
-
 
     public enum SeverityOfDisease
     {

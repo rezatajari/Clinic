@@ -26,7 +26,7 @@ namespace Clinic.Repositories
                     var patient = new Patient();
                     var gender = patient.GetGender();
                     var fullName = patient.GetFullName(gender);
-                    var age = new Random().Next(5, 80);
+                    var age = new Random().Next(5, 80);  // بازه سن هر فرد بین 5 سال تا 80 سال
                     var sickness = patient.GetSickness();
                     var severityOfDisease = patient.GetSeverityOfDisease();
 
@@ -60,15 +60,22 @@ namespace Clinic.Repositories
                             Id = ++receptionId,
                             Date = DateTime.Now,
                             Patients = patient,
-                            Score = SetRateScore(patient.Gender, patient.Age,
-                                                 patient.Sickness, patient.SeverityOfDisease)
+                            Score = GetScore(patient)
                         });
                     }
 
-                    var acceptPatient = listReception.OrderBy(s => s.Score).FirstOrDefault();
-                    var report = new ShowResult();
-                    report.Report(acceptPatient);
-                    GetPatient.Remove(acceptPatient.Patients);
+                    // کل لیست جدید که ساخته شده رو از لیست مرجع پاک می کنیم
+                    var clearGetPatient = listReception.Select(l => l.Patients.Id).ToList();
+                    GetPatient = GetPatient.Where(l => !clearGetPatient.Contains(l.Id)).ToList();
+
+                    // بیماری مورد قبول می باشد که از لحاظ امتیاز حاد بودن شرایطش و سپس بر اساس
+                    // زمان ورود زودتر وارد مطب شود
+                    var acceptPatient = listReception.OrderByDescending(s => s.Score)
+                                                     .ThenBy(d => d.Date).FirstOrDefault();
+
+                    new ShowResult().Report(acceptPatient);
+
+                    // حذف بیمار از لیست باگانی پذیرش
                     listReception.Remove(acceptPatient);
                 });
 
@@ -76,95 +83,46 @@ namespace Clinic.Repositories
             }
         }
 
-        public int SetRateScore(bool gender, int age, Sickness sickness,
-                                SeverityOfDisease severityOfDisease)
+        public int GetScore(Patient patient)
         {
-            int score = 0;
+            // امتیاز دهی براساس جنسیت و سن
+            IGenderScore gender;
+            if (patient.Gender)
+                gender = new Man();                  // polymorphism
+            else
+                gender = new Woman();                // polymorphism
 
-            // امتیاز دهی بر اساس سن و جنسیت 
-            switch (gender)
+            int getGenderScore = gender.GetScoreByGenderAndAge(patient.Age);
+
+
+            // امتیازدهی براساس نوع مریضی و شدت آن
+            ISicknessScore sickness;
+            switch (patient.Sickness)
             {
-                case true:
-                    if (age > 5 && age < 10) score = 3;
-                    else if (age > 10 && age < 20) score = 7;
-                    else score = 13;
+                case Sickness.HeartAttack:
+                    sickness = new HeartAttack();   // polymorphism  
                     break;
-                case false:
-                    if (age > 5 && age < 10) score = 5;
-                    else if (age > 10 && age < 20) score = 10;
-                    else score = 15;
+                case Sickness.Thalassemia:
+                    sickness = new Thalassemia();   // polymorphism
+                    break;
+                case Sickness.Canser:
+                    sickness = new Canser();        // polymorphism
+                    break;
+                case Sickness.Covid19:
+                    sickness = new Covid19();       // polymorphism
+                    break;
+                case Sickness.Cold:
+                    sickness = new Cold();          // polymorphism
+                    break;
+                default:
+                    sickness = new Cold();          // polymorphism
                     break;
             }
 
-            // امتیاز دهی بر اساس نوع مریضی و شدت آن
-            switch (severityOfDisease)
-            {
-                case SeverityOfDisease.Weak:
-                    switch (sickness)
-                    {
-                        case Sickness.HeartAttack:
-                            score += 40;
-                            break;
-                        case Sickness.Thalassemia:
-                            score += 10;
-                            break;
-                        case Sickness.Canser:
-                            score += 20;
-                            break;
-                        case Sickness.Covid19:
-                            score += 30;
-                            break;
-                        case Sickness.Cold:
-                            score += 5;
-                            break;
-                    }
-                    break;
-                case SeverityOfDisease.Normal:
-                    switch (sickness)
-                    {
-                        case Sickness.HeartAttack:
-                            score += 45;
-                            break;
-                        case Sickness.Thalassemia:
-                            score += 15;
-                            break;
-                        case Sickness.Canser:
-                            score += 25;
-                            break;
-                        case Sickness.Covid19:
-                            score += 35;
-                            break;
-                        case Sickness.Cold:
-                            score += 10;
-                            break;
-                    }
-                    break;
-                case SeverityOfDisease.Acute:
-                    switch (sickness)
-                    {
-                        case Sickness.HeartAttack:
-                            score += 50;
-                            break;
-                        case Sickness.Thalassemia:
-                            score += 20;
-                            break;
-                        case Sickness.Canser:
-                            score += 30;
-                            break;
-                        case Sickness.Covid19:
-                            score += 40;
-                            break;
-                        case Sickness.Cold:
-                            score += 15;
-                            break;
-                    }
-                    break;
-            }
+            int getSicknessScore = sickness.GetScoreBySickness(patient.SeverityOfDisease);
 
-            return score;
+            return getGenderScore + getSicknessScore;
         }
     }
-
-
 }
 

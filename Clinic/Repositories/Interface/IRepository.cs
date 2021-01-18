@@ -10,8 +10,6 @@ namespace Clinic.Repositories.Interface
     {
         Task GeneratingPatient();
         Task Reception();
-        int SetRateScore(bool gender, int age, Sickness sickness,
-                                 SeverityOfDisease severityOfDisease);
-
+        int GetScore(Patient patient);
     }
 }
